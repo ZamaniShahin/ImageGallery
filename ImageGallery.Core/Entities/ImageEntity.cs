@@ -1,8 +1,10 @@
+using ImageGallery.Shared.Abstractions;
+
 namespace ImageGallery.Core.Entities;
 
-public class Image : BaseEntity
+public class ImageEntity : BaseEntity
 {
-    public Image(byte[] content, string description)
+    public ImageEntity(byte[] content, string description)
     {
         Content = content;
         Description = description;
@@ -13,5 +15,5 @@ public class Image : BaseEntity
     public string Description { get; private set; }
 
     public Guid CategoryId { get; private set; }
-    public Category Category { get; private set; }
+    public CategoryEntity CategoryEntity { get; private set; }
 }

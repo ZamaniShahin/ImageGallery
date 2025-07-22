@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FastEndpoints" Version="6.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
     </ItemGroup>
 

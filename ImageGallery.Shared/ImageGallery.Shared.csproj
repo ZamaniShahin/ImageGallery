@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentResults" Version="4.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ImageGallery.Shared\ImageGallery.Shared.csproj" />
+        <PackageReference Include="FastEndpoints" Version="6.2.0" />
     </ItemGroup>
 </Project>

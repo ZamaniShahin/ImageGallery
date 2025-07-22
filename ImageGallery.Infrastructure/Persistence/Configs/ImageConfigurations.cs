@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ImageGallery.Infrastructure.Persistence.Configs;
 
-public class ImageConfigurations : IEntityTypeConfiguration<Image>
+public class ImageConfigurations : IEntityTypeConfiguration<ImageEntity>
 {
-    public void Configure(EntityTypeBuilder<Image> builder)
+    public void Configure(EntityTypeBuilder<ImageEntity> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();

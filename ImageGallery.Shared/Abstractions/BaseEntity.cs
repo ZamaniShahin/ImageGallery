@@ -1,4 +1,4 @@
-namespace ImageGallery.Core.Entities;
+namespace ImageGallery.Shared.Abstractions;
 
 public abstract class BaseEntity
 {

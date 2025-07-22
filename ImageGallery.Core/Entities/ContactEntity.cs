@@ -1,8 +1,10 @@
+using ImageGallery.Shared.Abstractions;
+
 namespace ImageGallery.Core.Entities;
 
 public class ContactEntity : BaseEntity
 {
-    public ContactEntity(string title, string url, string logo)
+    public ContactEntity(string title, string url, byte[] logo)
     {
         Title = title;
         Url = url;
@@ -11,5 +13,8 @@ public class ContactEntity : BaseEntity
 
     public string Title { get; private set; }
     public string Url { get; private set; }
-    public string Logo { get; private set; }
+    public byte[] Logo { get; private set; }
+
+    public Guid AboutUsId { get; private set; }
+    public AboutUsEntity AboutUsEntity { get; private set; }
 }

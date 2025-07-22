@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ImageGallery.Infrastructure.Persistence.Configs;
 
-public class CategoryConfigurations : IEntityTypeConfiguration<Category>
+public class CategoryConfigurations : IEntityTypeConfiguration<CategoryEntity>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(EntityTypeBuilder<CategoryEntity> builder)
     {
         builder.HasKey(c => c.Id);
         
@@ -22,7 +22,7 @@ public class CategoryConfigurations : IEntityTypeConfiguration<Category>
         
         builder
             .HasMany(x => x.Images)
-            .WithOne(x => x.Category)
+            .WithOne(x => x.CategoryEntity)
             .HasForeignKey(x => x.CategoryId);
     }
 }
