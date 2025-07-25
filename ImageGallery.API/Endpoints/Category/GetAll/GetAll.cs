@@ -9,7 +9,7 @@ public class GetAll : BaseEndpoint<EmptyRequest, Result<List<CategoryRecord>>>
 {
     public override void Configure()
     {
-        Post(Request.Route);
+        Get(Request.Route);
         DontAutoTag();
         Summary(s =>
         {
