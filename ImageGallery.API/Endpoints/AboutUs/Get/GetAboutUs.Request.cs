@@ -1,4 +1,4 @@
-namespace ImageGallery.API.Endpoints.AboutUs;
+namespace ImageGallery.API.Endpoints.AboutUs.Get;
 
 public class Request
 {
