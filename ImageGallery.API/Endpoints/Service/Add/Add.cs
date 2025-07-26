@@ -1,7 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.Service.Add;
 
 public class Add : BaseEndpoint<Request, Result<Guid>>

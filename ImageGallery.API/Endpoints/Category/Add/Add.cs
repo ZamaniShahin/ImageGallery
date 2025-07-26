@@ -1,7 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.Category.Add;
 
 public class Add
@@ -10,6 +6,7 @@ public class Add
     public override void Configure()
     {
         Post(Request.Route);
+        PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
         Summary(s =>
         {
