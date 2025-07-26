@@ -5,6 +5,7 @@ public class Add : BaseEndpoint<Request, Result<Guid>>
     public override void Configure()
     {
         Post(Request.Route);
+        PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
         Summary(s =>
         {
