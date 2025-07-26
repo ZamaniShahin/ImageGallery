@@ -1,5 +1,4 @@
 using System.Text.Json;
-using FluentValidation;
 
 namespace ImageGallery.API.Preprocessors;
 
