@@ -1,8 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Core.Records;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.AboutUs.Get;
 
 public class GetAboutUs : BaseEndpoint<Request, Result<AboutUsRecord>>

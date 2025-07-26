@@ -1,7 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.Service.Delete;
 
 public class Delete : BaseEndpoint<Request, Result<bool>>

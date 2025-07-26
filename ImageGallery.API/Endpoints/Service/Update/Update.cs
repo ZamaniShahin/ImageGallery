@@ -1,7 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.Service.Update;
 
 public class Update : BaseEndpoint<Request, Result<bool>>
@@ -9,6 +5,7 @@ public class Update : BaseEndpoint<Request, Result<bool>>
     public override void Configure()
     {
         Post(Request.Route);
+        PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
         Summary(s =>
         {
@@ -18,7 +15,7 @@ public class Update : BaseEndpoint<Request, Result<bool>>
     }
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var command = new Core.Services.Service.Update(request.Id, request.Title, request.Decription, request.Price, request.Logo);
+        var command = new Core.Services.Service.Update(request.Id, request.Title, request.Description, request.Price, request.Logo);
         var result = await command.ExecuteAsync(ct);
         await SendAsync(result);
     }

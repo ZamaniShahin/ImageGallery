@@ -1,8 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Core.Records;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.Category.GetAll;
 
 public class GetAll : BaseEndpoint<EmptyRequest, Result<List<CategoryRecord>>>

@@ -1,7 +1,3 @@
-using FastEndpoints;
-using FluentResults;
-using ImageGallery.Shared.Abstractions;
-
 namespace ImageGallery.API.Endpoints.AboutUs.Update;
 
 public class Update : BaseEndpoint<Request, Result<bool>>
@@ -9,6 +5,7 @@ public class Update : BaseEndpoint<Request, Result<bool>>
     public override void Configure()
     {
         Put(Request.Route);
+        PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
         Summary(s =>
         {
