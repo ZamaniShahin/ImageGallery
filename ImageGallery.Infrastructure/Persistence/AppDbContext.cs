@@ -6,36 +6,42 @@ namespace ImageGallery.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    private readonly IConfiguration _configuration;
-    public AppDbContext(IConfiguration configuration)
+    public AppDbContext()
     {
-        _configuration = configuration;
     }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
         
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(""); // todo: take from configurations
-    }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // todo: add fluents
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }
 
-public class DatabaseBuilder(IConfiguration configuration) : IDesignTimeDbContextFactory<AppDbContext>
+public class DatabaseBuilder : IDesignTimeDbContextFactory<AppDbContext>
 {
-    private readonly string _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new NullReferenceException();
     public AppDbContext CreateDbContext(string[] args)
     {
+        var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../ImageGallery.API"));
+
+        if (!Directory.Exists(basePath))
+            throw new DirectoryNotFoundException($"Could not find path: {basePath}");
+
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(basePath)
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+
+        var connectionString = configuration.GetConnectionString("DefaultConnection")
+                               ?? throw new InvalidOperationException("DefaultConnection not found in appsettings.json");
+
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseSqlServer(_connectionString);
+        optionsBuilder.UseSqlServer(connectionString);
+
         return new AppDbContext(optionsBuilder.Options);
     }
 }
