@@ -8,8 +8,9 @@ namespace ImageGallery.Core.Services.Category;
 
 public record GetAll() : ICommand<Result<List<CategoryRecord>>>;
 
-public sealed class GetAllHandler(IAppRepository<CategoryEntity> repository) : ICommandHandler<GetAll, Result<List<CategoryRecord>>>
-{    
+public sealed class GetAllHandler(IAppRepository<CategoryEntity> repository)
+    : ICommandHandler<GetAll, Result<List<CategoryRecord>>>
+{
     private readonly IAppRepository<CategoryEntity> _repository = repository;
 
     public async Task<Result<List<CategoryRecord>>> ExecuteAsync(GetAll command, CancellationToken ct)

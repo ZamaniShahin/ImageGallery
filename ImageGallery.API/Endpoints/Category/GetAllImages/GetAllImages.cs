@@ -1,6 +1,8 @@
+using ImageGallery.Core.Services.Category;
+
 namespace ImageGallery.API.Endpoints.Category.GetAllImages;
 
-public class GetAllImages : BaseEndpoint<Request, Result<List<ImageRecord>>>
+public sealed class GetCategoryImagesEndpoint : BaseEndpoint<Request, Result<List<ImageRecord>>>
 {
     public override void Configure()
     {
@@ -12,10 +14,11 @@ public class GetAllImages : BaseEndpoint<Request, Result<List<ImageRecord>>>
             s.Description = "Get All Images of a Category";
         });
     }
+
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var result = await new Core.Services.Category.GetAllImages(request.Id)
-            .ExecuteAsync(ct);
+        var handler = Resolve<GetAllImagesHandler>();
+        var result = await handler.ExecuteAsync(new GetAllImages(request.Id), ct);
         await SendAsync(result);
     }
 }

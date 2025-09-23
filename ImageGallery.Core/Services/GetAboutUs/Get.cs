@@ -8,7 +8,7 @@ namespace ImageGallery.Core.Services.GetAboutUs;
 
 public record Get() : ICommand<Result<AboutUsRecord>>;
 
-public sealed class GetUsHandler(IAppRepository<AboutUsEntity> repository) : ICommandHandler<Get, Result<AboutUsRecord>>
+public sealed class GetHandler(IAppRepository<AboutUsEntity> repository) : ICommandHandler<Get, Result<AboutUsRecord>>
 {
     private readonly IAppRepository<AboutUsEntity> _repository = repository;
 

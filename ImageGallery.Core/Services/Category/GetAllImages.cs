@@ -8,7 +8,8 @@ namespace ImageGallery.Core.Services.Category;
 
 public record GetAllImages(Guid Id) : ICommand<Result<List<ImageRecord>>>;
 
-public sealed class GetAllImagesHandler(IAppRepository<CategoryEntity> repository) : ICommandHandler<GetAllImages, Result<List<ImageRecord>>>
+public sealed class GetAllImagesHandler(IAppRepository<CategoryEntity> repository)
+    : ICommandHandler<GetAllImages, Result<List<ImageRecord>>>
 {
     private readonly IAppRepository<CategoryEntity> _repository = repository;
 

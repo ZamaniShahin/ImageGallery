@@ -1,6 +1,8 @@
+using ImageGallery.Core.Services.GetAboutUs;
+
 namespace ImageGallery.API.Endpoints.AboutUs.Get;
 
-public class GetAboutUs : BaseEndpoint<Request, Result<AboutUsRecord>>
+public sealed class GetAboutUsEndpoint : BaseEndpoint<Request, Result<AboutUsRecord>>
 {
     public override void Configure()
     {
@@ -12,9 +14,11 @@ public class GetAboutUs : BaseEndpoint<Request, Result<AboutUsRecord>>
             s.Description = "Get About Us Page Info";
         });
     }
+
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var result = await new Core.Services.GetAboutUs.Get().ExecuteAsync(ct);
+        var handler = Resolve<GetHandler>();
+        var result = await handler.ExecuteAsync(new Get(), ct);
         await SendAsync(result);
     }
 }

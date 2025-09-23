@@ -4,7 +4,7 @@ namespace ImageGallery.API.Endpoints.AboutUs.Update;
 
 public class Request
 {
-    public const string Route = "about-us";
+    public const string Route = "/about-us";
 
     public string Title { get; set; } = string.Empty;
 

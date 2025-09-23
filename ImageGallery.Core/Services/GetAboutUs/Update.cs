@@ -6,9 +6,11 @@ using ImageGallery.Shared.Abstractions;
 namespace ImageGallery.Core.Services.GetAboutUs;
 
 public record Update(string Title, string H2Title, string Description, byte[] Image) : ICommand<Result<bool>>;
+
 public sealed class UpdateHandler(IAppRepository<AboutUsEntity> repository) : ICommandHandler<Update, Result<bool>>
 {
     private readonly IAppRepository<AboutUsEntity> _repository = repository;
+
     public async Task<Result<bool>> ExecuteAsync(Update command, CancellationToken ct)
     {
         var about = await _repository.SingleOrDefaultAsync(

@@ -7,11 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FastEndpoints.Swagger" Version="6.2.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ImageGallery.Core\ImageGallery.Core.csproj" />
       <ProjectReference Include="..\ImageGallery.Infrastructure\ImageGallery.Infrastructure.csproj" />
     </ItemGroup>
 
