@@ -1,5 +1,3 @@
-using System;
-
 namespace ImageGallery.API.Endpoints.Category.GetAllImages;
 
 public class Request

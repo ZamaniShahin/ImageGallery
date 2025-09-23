@@ -2,11 +2,12 @@ using ImageGallery.Core.Services.Service;
 
 namespace ImageGallery.API.Endpoints.Service.GetAll;
 
-public sealed class GetAllServicesEndpoint : BaseEndpoint<Request, Result<List<ServiceRecord>>>
+public sealed class GetAllServicesEndpoint : BaseEndpoint<EmptyRequest, Result<List<ServiceRecord>>>
 {
     public override void Configure()
     {
         Get(Request.Route);
+        AllowAnonymous();
         DontAutoTag();
         Summary(s =>
         {
@@ -15,10 +16,10 @@ public sealed class GetAllServicesEndpoint : BaseEndpoint<Request, Result<List<S
         });
     }
 
-    protected override async Task ExecuteAsync(Request request, CancellationToken ct)
+    protected override async Task ExecuteAsync(EmptyRequest request, CancellationToken ct)
     {
         var handler = Resolve<GetAllHandler>();
-        var result = await handler.ExecuteAsync(new GetAll(), ct);
+        var result = await handler.ExecuteAsync(new Core.Services.Service.GetAll(), ct);
         await SendAsync(result);
     }
 }

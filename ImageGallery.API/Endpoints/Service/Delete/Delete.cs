@@ -8,6 +8,7 @@ public sealed class DeleteServiceEndpoint : BaseEndpoint<Request, Result<bool>>
     {
         Delete(Request.Route);
         DontAutoTag();
+        AllowAnonymous();
         Summary(s =>
         {
             s.Summary = "Delete Service By Id";
@@ -18,7 +19,7 @@ public sealed class DeleteServiceEndpoint : BaseEndpoint<Request, Result<bool>>
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
         var handler = Resolve<DeleteHandler>();
-        var command = new Delete(request.Id);
+        var command = new Core.Services.Service.Delete(request.Id);
         var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }

@@ -3,12 +3,12 @@ using FluentResults;
 using ImageGallery.Core.Entities;
 using ImageGallery.Core.Records;
 using ImageGallery.Shared.Abstractions;
-using Microsoft.EntityFrameworkCore;
 
 namespace ImageGallery.Core.Services.Category;
 
 public record GetAll() : ICommand<Result<List<CategoryRecord>>>;
 
+//todo: make the handlers internal
 public sealed class GetAllHandler(IAppRepository<CategoryEntity> repository)
     : ICommandHandler<GetAll, Result<List<CategoryRecord>>>
 {

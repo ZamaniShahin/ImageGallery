@@ -3,7 +3,6 @@ using FluentResults;
 using ImageGallery.Core.Entities;
 using ImageGallery.Core.Records;
 using ImageGallery.Shared.Abstractions;
-using Microsoft.EntityFrameworkCore;
 
 namespace ImageGallery.Core.Services.GetAboutUs;
 
@@ -15,22 +14,22 @@ public sealed class GetHandler(IAppRepository<AboutUsEntity> repository) : IComm
 
     public async Task<Result<AboutUsRecord>> ExecuteAsync(Get command, CancellationToken ct)
     {
-        var query = await _repository.GetWithIncludesAsync(true, x => x.Employees);
+        var entity = await _repository.FirstOrDefaultAsync(x => true,
+            true,
+            ct,
+            x => x.Employees);
 
-        var about = await query
-            .Select(x => new AboutUsRecord(
-                x.Title,
-                x.H2Title,
-                x.Description,
-                x.Image,
-                x.Employees
-                    .Select(e => new EmployeeRecord(
-                        e.Id,
-                        e.Title,
-                        e.Description,
-                        e.ProfilePhoto))
-                    .ToList()))
-            .SingleOrDefaultAsync(ct);
+        var about = new AboutUsRecord(
+            entity.Title,
+            entity.H2Title,
+            entity.Description,
+            entity.Image,
+            entity.Employees
+                .Select(e => new EmployeeRecord(
+                    e.Id,
+                    e.Title,
+                    e.Description,
+                    e.ProfilePhoto)).ToList());
 
         if (about is null)
         {

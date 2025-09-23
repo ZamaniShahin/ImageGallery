@@ -10,6 +10,7 @@ public sealed class AddCategoryEndpoint
         Post(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
+        AllowAnonymous();
         Summary(s =>
         {
             s.Summary = "Add Category";
@@ -20,7 +21,7 @@ public sealed class AddCategoryEndpoint
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
         var handler = Resolve<AddHandler>();
-        var command = new Add(request.Title, request.Description);
+        var command = new Core.Services.Category.Add(request.Title, request.Description);
         var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }

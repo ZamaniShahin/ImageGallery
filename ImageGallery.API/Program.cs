@@ -38,13 +38,14 @@ builder.Services.AddHttpLogging(logging =>
 });
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
+//todo: add keycloak and uncomment this codes
+// builder.Services.AddAuthentication();
+// builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.UseHttpLogging();
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 app.UseFastEndpoints(c =>
     {
         c.Endpoints.ShortNames = true;

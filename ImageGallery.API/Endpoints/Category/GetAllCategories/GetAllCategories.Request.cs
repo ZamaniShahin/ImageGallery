@@ -1,4 +1,4 @@
-namespace ImageGallery.API.Endpoints.Category.GetAll;
+namespace ImageGallery.API.Endpoints.Category.GetAllCategories;
 
 public class Request
 {

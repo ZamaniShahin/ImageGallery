@@ -1,13 +1,15 @@
 using ImageGallery.Core.Services.Category;
 
-namespace ImageGallery.API.Endpoints.Category.GetAll;
+namespace ImageGallery.API.Endpoints.Category.GetAllCategories;
 
-public sealed class GetAllCategoriesEndpoint : BaseEndpoint<Request, Result<List<CategoryRecord>>>
+public sealed class GetAllCategoriesEndpoint : BaseEndpoint<EmptyRequest, Result<List<CategoryRecord>>>
 {
     public override void Configure()
     {
         Get(Request.Route);
         DontAutoTag();
+        //todo: remove allow anonymous from needed endpoints
+        AllowAnonymous();
         Summary(s =>
         {
             s.Summary = "Get All Categories";
@@ -15,7 +17,7 @@ public sealed class GetAllCategoriesEndpoint : BaseEndpoint<Request, Result<List
         });
     }
 
-    protected override async Task ExecuteAsync(Request request, CancellationToken ct)
+    protected override async Task ExecuteAsync(EmptyRequest request, CancellationToken ct)
     {
         var handler = Resolve<GetAllHandler>();
         var result = await handler.ExecuteAsync(new GetAll(), ct);

@@ -8,6 +8,7 @@ public sealed class GetCategoryImagesEndpoint : BaseEndpoint<Request, Result<Lis
     {
         Get(Request.Route);
         DontAutoTag();
+        AllowAnonymous();
         Summary(s =>
         {
             s.Summary = "Get All Images of a Category";
@@ -18,7 +19,7 @@ public sealed class GetCategoryImagesEndpoint : BaseEndpoint<Request, Result<Lis
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
         var handler = Resolve<GetAllImagesHandler>();
-        var result = await handler.ExecuteAsync(new GetAllImages(request.Id), ct);
+        var result = await handler.ExecuteAsync(new Core.Services.Category.GetAllImages(request.Id), ct);
         await SendAsync(result);
     }
 }

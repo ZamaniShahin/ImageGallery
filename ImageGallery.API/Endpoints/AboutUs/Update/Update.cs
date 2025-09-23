@@ -8,6 +8,7 @@ public sealed class UpdateAboutUsEndpoint : BaseEndpoint<Request, Result<bool>>
     {
         Put(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
+        AllowAnonymous();
         DontAutoTag();
         Summary(s =>
         {
@@ -19,7 +20,7 @@ public sealed class UpdateAboutUsEndpoint : BaseEndpoint<Request, Result<bool>>
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
         var handler = Resolve<UpdateHandler>();
-        var command = new Update(request.Title, request.H2Title, request.Description, request.Image);
+        var command = new Core.Services.GetAboutUs.Update(request.Title, request.H2Title, request.Description, request.Image);
         var result = await handler.ExecuteAsync(command, ct);
 
         await SendAsync(result);

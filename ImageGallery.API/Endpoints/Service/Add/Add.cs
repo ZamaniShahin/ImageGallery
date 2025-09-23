@@ -9,6 +9,7 @@ public sealed class AddServiceEndpoint : BaseEndpoint<Request, Result<Guid>>
         Post(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
+        AllowAnonymous();
         Summary(s =>
         {
             s.Summary = "Add Service";
@@ -19,7 +20,7 @@ public sealed class AddServiceEndpoint : BaseEndpoint<Request, Result<Guid>>
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
         var handler = Resolve<AddHandler>();
-        var command = new Add(request.Title, request.Description, request.Price, request.Logo);
+        var command = new Core.Services.Service.Add(request.Title, request.Description, request.Price, request.Logo);
         var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }
