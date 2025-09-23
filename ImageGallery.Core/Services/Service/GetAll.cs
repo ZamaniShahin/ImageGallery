@@ -3,6 +3,7 @@ using FluentResults;
 using ImageGallery.Core.Entities;
 using ImageGallery.Core.Records;
 using ImageGallery.Shared.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ImageGallery.Core.Services.Service;
 

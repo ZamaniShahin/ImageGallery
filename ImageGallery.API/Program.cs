@@ -47,6 +47,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints(c =>
     {
+        c.Endpoints.ShortNames = true;
         c.Endpoints.RoutePrefix = "api";
     })
     .UseSwaggerGen();

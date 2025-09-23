@@ -4,7 +4,7 @@ namespace ImageGallery.API.Endpoints.Service.Add;
 
 public class Request
 {
-    public const string Route = "/services";
+    public const string Route = "services";
 
     public string Title { get; set; } = string.Empty;
 
