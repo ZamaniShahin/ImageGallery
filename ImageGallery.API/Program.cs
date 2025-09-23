@@ -1,10 +1,12 @@
 using FastEndpoints.Swagger;
 using ImageGallery.Infrastructure;
 using ImageGallery.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddValidatorsFromAssemblyContaining<IValidationPreProcessor>(ServiceLifetime.Singleton);
+
 builder.Services.AddFastEndpoints()
     .SwaggerDocument(o =>
     {
@@ -23,8 +25,12 @@ builder.Services.AddFastEndpoints()
         o.EnableJWTBearerAuth = true;
     });
 
-builder.Services.AddScoped<AppDbContext>();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped(typeof(IAppRepository<>), typeof(AppRepository<>));
+builder.Services.AddCoreServices();
 builder.Services.AddHttpLogging(logging =>
 {
     logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
@@ -36,6 +42,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+app.UseHttpLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints(c =>

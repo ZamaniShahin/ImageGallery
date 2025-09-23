@@ -1,6 +1,8 @@
+using ImageGallery.Core.Services.Category;
+
 namespace ImageGallery.API.Endpoints.Category.GetAll;
 
-public class GetAll : BaseEndpoint<EmptyRequest, Result<List<CategoryRecord>>>
+public sealed class GetAllCategoriesEndpoint : BaseEndpoint<Request, Result<List<CategoryRecord>>>
 {
     public override void Configure()
     {
@@ -13,10 +15,10 @@ public class GetAll : BaseEndpoint<EmptyRequest, Result<List<CategoryRecord>>>
         });
     }
 
-    protected override async Task ExecuteAsync(EmptyRequest request, CancellationToken ct)
+    protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var result = await new Core.Services.Category.GetAll()
-            .ExecuteAsync(ct);
+        var handler = Resolve<GetAllHandler>();
+        var result = await handler.ExecuteAsync(new GetAll(), ct);
 
         await SendAsync(result);
     }

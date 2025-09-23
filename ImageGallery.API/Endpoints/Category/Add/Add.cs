@@ -1,6 +1,8 @@
+using ImageGallery.Core.Services.Category;
+
 namespace ImageGallery.API.Endpoints.Category.Add;
 
-public class Add
+public sealed class AddCategoryEndpoint
     : BaseEndpoint<Request, Result<Guid>>
 {
     public override void Configure()
@@ -17,8 +19,9 @@ public class Add
 
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var command = new Core.Services.Category.Add(request.Title, request.Description);
-        var result = await command.ExecuteAsync(ct);
+        var handler = Resolve<AddHandler>();
+        var command = new Add(request.Title, request.Description);
+        var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }
 }

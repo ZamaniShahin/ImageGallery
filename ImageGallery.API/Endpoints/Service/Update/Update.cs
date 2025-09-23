@@ -1,6 +1,8 @@
+using ImageGallery.Core.Services.Service;
+
 namespace ImageGallery.API.Endpoints.Service.Update;
 
-public class Update : BaseEndpoint<Request, Result<bool>>
+public sealed class UpdateServiceEndpoint : BaseEndpoint<Request, Result<bool>>
 {
     public override void Configure()
     {
@@ -13,10 +15,12 @@ public class Update : BaseEndpoint<Request, Result<bool>>
             s.Description = "Update Service";
         });
     }
+
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var command = new Core.Services.Service.Update(request.Id, request.Title, request.Description, request.Price, request.Logo);
-        var result = await command.ExecuteAsync(ct);
+        var handler = Resolve<UpdateHandler>();
+        var command = new Update(request.Id, request.Title, request.Description, request.Price, request.Logo);
+        var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }
 }

@@ -1,6 +1,8 @@
+using ImageGallery.Core.Services.Service;
+
 namespace ImageGallery.API.Endpoints.Service.Delete;
 
-public class Delete : BaseEndpoint<Request, Result<bool>>
+public sealed class DeleteServiceEndpoint : BaseEndpoint<Request, Result<bool>>
 {
     public override void Configure()
     {
@@ -15,8 +17,9 @@ public class Delete : BaseEndpoint<Request, Result<bool>>
 
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var command = new Core.Services.Service.Delete(request.Id);
-        var result = await command.ExecuteAsync(ct);
+        var handler = Resolve<DeleteHandler>();
+        var command = new Delete(request.Id);
+        var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }
 }
