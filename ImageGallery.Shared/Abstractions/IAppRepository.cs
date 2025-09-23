@@ -12,3 +12,4 @@ public interface IAppRepository<TEntity> where TEntity : BaseEntity
     Task<IQueryable<TEntity>> GetWithIncludesAsync(bool isReadOnly = false, params Expression<Func<TEntity, object>>[] includes);
     Task<bool> SaveChangesAsync();
 }
+

@@ -4,7 +4,7 @@ public class Update : BaseEndpoint<Request, Result<bool>>
 {
     public override void Configure()
     {
-        Post(Request.Route);
+        Put(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
         Summary(s =>

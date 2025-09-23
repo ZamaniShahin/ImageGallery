@@ -40,13 +40,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints(c =>
     {
-        // c.Versioning.Prefix = "v";
-        // c.Versioning.DefaultVersion = 1;
-        // c.Versioning.PrependToRoute = true;
         c.Endpoints.ShortNames = true;
         c.Endpoints.RoutePrefix = "api";
-    }).UseSwaggerGen()
-    ;
+    })
+    .UseSwaggerGen();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

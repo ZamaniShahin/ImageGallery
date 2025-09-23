@@ -1,20 +1,14 @@
+using System;
+
 namespace ImageGallery.Shared.Abstractions;
 
 public abstract class BaseEntity
 {
-    public Guid Id
-    {
-        get => Id;
-        set => value = Guid.NewGuid();
-    }
+    public Guid Id { get; private set; } = Guid.NewGuid();
 
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
-    public DateTime CreatedAt
-    {
-        get => CreatedAt;
-        set => value = DateTime.Now;
-    }
-    protected void Modified() => this.ModifiedAt = DateTime.Now;
+    public DateTime? ModifiedAt { get; private set; }
 
-    public DateTime? ModifiedAt { get; private set; } = null;
+    protected void Modified() => ModifiedAt = DateTime.UtcNow;
 }
