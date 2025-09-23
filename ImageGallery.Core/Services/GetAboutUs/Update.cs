@@ -2,6 +2,7 @@ using FastEndpoints;
 using FluentResults;
 using ImageGallery.Core.Entities;
 using ImageGallery.Shared.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ImageGallery.Core.Services.GetAboutUs;
 
@@ -11,11 +12,20 @@ public sealed class UpdateHandler(IAppRepository<AboutUsEntity> repository) : IC
     private readonly IAppRepository<AboutUsEntity> _repository = repository;
     public async Task<Result<bool>> ExecuteAsync(Update command, CancellationToken ct)
     {
-        var about = _repository.GetAsQuery()
-            .Single();
-        about.Update(about.Title, about.H2Title, about.Description, about.Image);
+        var about = await _repository
+            .GetAsQuery()
+            .SingleOrDefaultAsync(ct);
+
+        if (about is null)
+        {
+            return Result.Fail<bool>("About us information not found");
+        }
+
+        about.Update(command.Title, command.H2Title, command.Description, command.Image);
+
         await _repository.UpdateAsync(about);
         await _repository.SaveChangesAsync();
+
         return Result.Ok(true);
     }
 }

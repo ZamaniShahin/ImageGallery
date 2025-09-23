@@ -3,6 +3,7 @@ using FluentResults;
 using ImageGallery.Core.Entities;
 using ImageGallery.Core.Records;
 using ImageGallery.Shared.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ImageGallery.Core.Services.GetAboutUs;
 
@@ -16,13 +17,20 @@ public sealed class GetUsHandler(IAppRepository<AboutUsEntity> repository) : ICo
     {
         var query = await _repository.GetWithIncludesAsync(true, x => x.Employees);
 
-        var about = query
-            .Select(x => new AboutUsRecord(x.Title,
+        var about = await query
+            .Select(x => new AboutUsRecord(
+                x.Title,
                 x.H2Title,
                 x.Description,
                 x.Image,
                 x.Employees.Select(e => new EmployeeRecord(e.Id, e.Title, e.Description, e.ProfilePhoto)).ToList()))
-            .Single();
+            .SingleOrDefaultAsync(ct);
+
+        if (about is null)
+        {
+            return Result.Fail<AboutUsRecord>("About us information not found");
+        }
+
         return Result.Ok(about);
     }
 }

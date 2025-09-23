@@ -2,7 +2,10 @@ using System.Text.Json;
 
 namespace ImageGallery.API.Preprocessors;
 
-public interface IValidationPreProcessor{}
+public interface IValidationPreProcessor
+{
+}
+
 public class ValidationPreprocessor<TRequest> : IPreProcessor<TRequest> where TRequest : notnull
 {
     public async Task PreProcessAsync(IPreProcessorContext<TRequest> ctx, CancellationToken ct)

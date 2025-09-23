@@ -1,10 +1,16 @@
+using System;
+
 namespace ImageGallery.API.Endpoints.AboutUs.Update;
 
 public class Request
 {
-    public const string Route = "AboutUs";
-    public string Title { get; set; }
-    public string H2Title { get; set; }
-    public string Description { get; private set; }
-    public byte[] Image { get; set; }
+    public const string Route = "about-us";
+
+    public string Title { get; set; } = string.Empty;
+
+    public string H2Title { get; set; } = string.Empty;
+
+    public string Description { get; set; } = string.Empty;
+
+    public byte[] Image { get; set; } = Array.Empty<byte>();
 }

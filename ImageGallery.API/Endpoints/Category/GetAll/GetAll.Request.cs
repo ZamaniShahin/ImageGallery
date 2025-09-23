@@ -2,5 +2,5 @@ namespace ImageGallery.API.Endpoints.Category.GetAll;
 
 public class Request
 {
-    public const string Route = "Category";
+    public const string Route = "categories";
 }

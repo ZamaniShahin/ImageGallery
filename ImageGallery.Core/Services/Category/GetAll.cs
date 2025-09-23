@@ -3,6 +3,7 @@ using FluentResults;
 using ImageGallery.Core.Entities;
 using ImageGallery.Core.Records;
 using ImageGallery.Shared.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ImageGallery.Core.Services.Category;
 
@@ -14,10 +15,11 @@ public sealed class GetAllHandler(IAppRepository<CategoryEntity> repository) : I
 
     public async Task<Result<List<CategoryRecord>>> ExecuteAsync(GetAll command, CancellationToken ct)
     {
-        var categories = _repository
+        var categories = await _repository
             .GetAsQuery(true)
             .Select(x => new CategoryRecord(x.Id, x.Title, x.Description))
-            .ToList();
+            .ToListAsync(ct);
+
         return Result.Ok(categories);
     }
 }
