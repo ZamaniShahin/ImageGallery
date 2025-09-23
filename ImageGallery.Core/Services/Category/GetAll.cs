@@ -14,10 +14,11 @@ public sealed class GetAllHandler(IAppRepository<CategoryEntity> repository) : I
 
     public async Task<Result<List<CategoryRecord>>> ExecuteAsync(GetAll command, CancellationToken ct)
     {
-        var categories = _repository
-            .GetAsQuery(true)
-            .Select(x => new CategoryRecord(x.Id, x.Title, x.Description))
-            .ToList();
+        var categories = await _repository.ListAsync(
+            query => query.Select(x => new CategoryRecord(x.Id, x.Title, x.Description)),
+            true,
+            ct);
+
         return Result.Ok(categories);
     }
 }

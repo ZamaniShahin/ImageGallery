@@ -14,13 +14,21 @@ public sealed class GetAllImagesHandler(IAppRepository<CategoryEntity> repositor
 
     public async Task<Result<List<ImageRecord>>> ExecuteAsync(GetAllImages command, CancellationToken ct)
     {
-        var query = await _repository
-                .GetWithIncludesAsync(true, x => x.Images);
-        var images = query
-            .Where(x => x.Id == command.Id)
-            .SelectMany(x => x.Images.Select(i => new ImageRecord(i.Id, i.Description, i.Content)))
+        var category = await _repository.FirstOrDefaultAsync(
+            x => x.Id == command.Id,
+            true,
+            ct,
+            x => x.Images);
+
+        if (category is null)
+        {
+            return Result.Fail<List<ImageRecord>>("Category not found");
+        }
+
+        var images = category.Images
+            .Select(i => new ImageRecord(i.Id, i.Description, i.Content))
             .ToList();
-        
-            return images.Count == 0 ? Result.Fail("User Not Found") : Result.Ok(images);
+
+        return Result.Ok(images);
     }
 }

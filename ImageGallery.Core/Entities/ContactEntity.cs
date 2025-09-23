@@ -1,3 +1,4 @@
+using System;
 using ImageGallery.Shared.Abstractions;
 
 namespace ImageGallery.Core.Entities;
@@ -11,10 +12,17 @@ public class ContactEntity : BaseEntity
         Logo = logo;
     }
 
-    public string Title { get; private set; }
-    public string Url { get; private set; }
-    public byte[] Logo { get; private set; }
+    private ContactEntity()
+    {
+    }
+
+    public string Title { get; private set; } = string.Empty;
+
+    public string Url { get; private set; } = string.Empty;
+
+    public byte[] Logo { get; private set; } = Array.Empty<byte>();
 
     public Guid AboutUsId { get; private set; }
-    public AboutUsEntity AboutUsEntity { get; private set; }
+
+    public AboutUsEntity AboutUsEntity { get; private set; } = null!;
 }

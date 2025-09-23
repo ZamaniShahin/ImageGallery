@@ -14,15 +14,22 @@ public sealed class GetUsHandler(IAppRepository<AboutUsEntity> repository) : ICo
 
     public async Task<Result<AboutUsRecord>> ExecuteAsync(Get command, CancellationToken ct)
     {
-        var query = await _repository.GetWithIncludesAsync(true, x => x.Employees);
-
-        var about = query
-            .Select(x => new AboutUsRecord(x.Title,
+        var about = await _repository.SingleOrDefaultAsync(
+            query => query.Select(x => new AboutUsRecord(
+                x.Title,
                 x.H2Title,
                 x.Description,
                 x.Image,
-                x.Employees.Select(e => new EmployeeRecord(e.Id, e.Title, e.Description, e.ProfilePhoto)).ToList()))
-            .Single();
+                x.Employees.Select(e => new EmployeeRecord(e.Id, e.Title, e.Description, e.ProfilePhoto)).ToList())),
+            true,
+            ct,
+            x => x.Employees);
+
+        if (about is null)
+        {
+            return Result.Fail<AboutUsRecord>("About us information not found");
+        }
+
         return Result.Ok(about);
     }
 }

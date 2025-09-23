@@ -1,3 +1,4 @@
+using System;
 using ImageGallery.Shared.Abstractions;
 
 namespace ImageGallery.Core.Entities;
@@ -18,9 +19,17 @@ public class ServiceEntity : BaseEntity
         Description = description;
         Price = price;
         Logo = logo;
+        Modified();
     }
-    public string Title { get; private set; }
-    public string Description { get; private set; }
+    private ServiceEntity()
+    {
+    }
+
+    public string Title { get; private set; } = string.Empty;
+
+    public string Description { get; private set; } = string.Empty;
+
     public decimal Price { get; private set; }
-    public byte[] Logo { get; private set; }
+
+    public byte[] Logo { get; private set; } = Array.Empty<byte>();
 }
