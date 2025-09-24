@@ -5,8 +5,9 @@ namespace ImageGallery.Core.Entities;
 
 public class ImageEntity : BaseEntity
 {
-    public ImageEntity(byte[] content, string description)
+    public ImageEntity(Guid categoryId, byte[] content, string description)
     {
+        CategoryId = categoryId;
         Content = content;
         Description = description;
     }

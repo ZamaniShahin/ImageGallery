@@ -1,4 +1,5 @@
 using FastEndpoints.Swagger;
+using ImageGallery.Core.Services.Category;
 using ImageGallery.Infrastructure;
 using ImageGallery.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,22 @@ builder.Services.AddFastEndpoints()
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
-
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<AddImageHandler>()
+    .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)))
+    .AsSelfWithInterfaces()
+    .WithScopedLifetime());
+//todo: move to appsettings
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5173", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped(typeof(IAppRepository<>), typeof(AppRepository<>));
 builder.Services.AddCoreServices();
@@ -44,6 +60,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 app.UseHttpLogging();
+app.UseCors("AllowLocalhost5173");
 // app.UseAuthentication();
 // app.UseAuthorization();
 app.UseFastEndpoints(c =>
