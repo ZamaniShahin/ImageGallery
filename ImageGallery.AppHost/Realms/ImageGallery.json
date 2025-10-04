@@ -1,0 +1,29 @@
+﻿{
+  "realm": "ImageGallery",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "imagegallery-api",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "dev-api-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "test1",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Pass123$",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}
