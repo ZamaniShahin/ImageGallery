@@ -18,6 +18,7 @@
       <ProjectReference Include="..\ImageGallery.Core\ImageGallery.Core.csproj" />
       <ProjectReference Include="..\ImageGallery.Infrastructure\ImageGallery.Infrastructure.csproj" />
       <ProjectReference Include="..\ImageGallery.ServiceDefaults\ImageGallery.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\ImageGallery.Shared\ImageGallery.Shared.csproj" />
     </ItemGroup>
 
 </Project>

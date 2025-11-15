@@ -9,7 +9,7 @@ public sealed class UpdateServiceEndpoint : BaseEndpoint<Request, Result<bool>>
         Put(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
-        AllowAnonymous();
+        Roles(Shared.Roles.Admin);
         Summary(s =>
         {
             s.Summary = "Update Service";

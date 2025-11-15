@@ -23,4 +23,6 @@ public class ImageEntity : BaseEntity
     public Guid CategoryId { get; private set; }
 
     public CategoryEntity CategoryEntity { get; private set; } = null!;
+
+    public ICollection<CommentEntity> Comments { get; private set; }
 }

@@ -14,5 +14,10 @@ public class ImageConfigurations : IEntityTypeConfiguration<ImageEntity>
         builder.Property(x => x.Description)
             .HasMaxLength(LengthConstants.DescriptionMaxLength)
             .IsRequired();
+        
+        builder.HasMany(x => x.Comments)
+            .WithOne(x => x.Image)
+            .HasForeignKey(x => x.ImageId)
+            .OnDelete(DeleteBehavior.Cascade);;
     }
 }

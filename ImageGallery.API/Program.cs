@@ -1,105 +1,128 @@
+using System.Security.Claims;
+using FastEndpoints;
 using FastEndpoints.Swagger;
 using ImageGallery.Core.Services.Category;
 using ImageGallery.Infrastructure;
 using ImageGallery.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddValidatorsFromAssemblyContaining<IValidationPreProcessor>(ServiceLifetime.Singleton);
 builder.AddServiceDefaults();
 builder.WebHost.UseUrls("http://0.0.0.0:7113");
-builder.Services.AddAuthentication() // default scheme chosen by AddKeycloakJwtBearer
-    .AddKeycloakJwtBearer(
-        serviceName: "keycloak",       // matches the name you used in AppHost
-        realm: "ImageGallery",         // matches realm import
-        options =>
-        {
-            options.Audience = "imagegallery-api";
-            if (builder.Environment.IsDevelopment())
-            {
-                options.RequireHttpsMetadata = false; // dev only
-            }
-        });
-builder.Services.AddAuthorization();
-builder.Services.AddFastEndpoints()
-    .SwaggerDocument(o =>
+//todo: move to appsettings
+var keycloakRealm = "ImageGallery";
+var keycloakBaseUrl = "http://localhost:8080";
+var keycloakAuthority = $"{keycloakBaseUrl}/realms/{keycloakRealm}";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ImageGalleryCors", policy =>
     {
-        o.SerializerSettings = options =>
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+builder.Services
+    .AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = keycloakAuthority;
+        options.MetadataAddress = $"{keycloakAuthority}/.well-known/openid-configuration";
+        options.RequireHttpsMetadata = false;
+
+        
+        options.TokenValidationParameters = new()
         {
-            options.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            ValidateAudience = false,
+            ValidateIssuer = true,
+            RoleClaimType = ClaimTypes.Role
         };
-        o.DocumentSettings = d =>
+
+        options.Events = new JwtBearerEvents
         {
-            d.MarkNonNullablePropsAsRequired();
-            d.DocumentName = "ImageGallery.API";
-            d.Title = "ImageGallery.API";
-            d.Version = "v1";
+            OnTokenValidated = context =>
+            {
+                var identity = context.Principal!.Identity as ClaimsIdentity;
+
+                // realm roles
+                var realmRoles = context.Principal.FindAll("realm_access.roles");
+                foreach (var realmRole in realmRoles)
+                    identity!.AddClaim(new Claim(ClaimTypes.Role, realmRole.Value));
+
+                // client roles (imagegallery-frontend)
+                var resourceAccess = context.Principal.FindFirst("resource_access");
+                if (resourceAccess != null)
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(resourceAccess.Value);
+
+                    if (doc.RootElement.TryGetProperty("imagegallery-frontend", out var frontendClient))
+                    {
+                        if (frontendClient.TryGetProperty("roles", out var roles))
+                        {
+                            foreach (var r in roles.EnumerateArray())
+                            {
+                                var roleName = r.GetString();
+                                if (!string.IsNullOrWhiteSpace(roleName))
+                                    identity!.AddClaim(new Claim(ClaimTypes.Role, roleName));
+                            }
+                        }
+                    }
+                }
+
+                return Task.CompletedTask;
+            }
         };
-        o.ShortSchemaNames = true;
-        o.EnableJWTBearerAuth = true;
     });
 
+builder.Services.AddAuthorization();
+
+builder.Services.AddFastEndpoints();
+builder.Services.SwaggerDocument();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                       ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+                       ?? throw new InvalidOperationException(
+                           "Connection string 'DefaultConnection' is not configured.");
+
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<AddImageHandler>()
     .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)))
     .AsSelfWithInterfaces()
     .WithScopedLifetime());
-//todo: move to appsettings
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowLocalhost5173", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped(typeof(IAppRepository<>), typeof(AppRepository<>));
 builder.Services.AddCoreServices();
+
 builder.Services.AddHttpLogging(logging =>
 {
     logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
     logging.CombineLogs = true;
 });
+
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-//todo: add keycloak and uncomment this codes
-// builder.Services.AddAuthentication();
-// builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
-app.UseHttpLogging();
-app.UseCors("AllowLocalhost5173");
+
+
+app.UseRouting();
+app.UseCors("ImageGalleryCors");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseFastEndpoints(c =>
-    {
-        c.Endpoints.ShortNames = true;
-        c.Endpoints.RoutePrefix = "api";
-    })
-    .UseSwaggerGen();
+var apiGroup = app.MapGroup("/api");
+apiGroup.MapFastEndpoints();
 
-// Configure the HTTP request pipeline.
+app.UseHttpLogging();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    if (db.Database.GetPendingMigrations().Any())
-    {
-        db.Database.Migrate();
-    }
-}
-
-// app.UseHttpsRedirection();
-app.MapDefaultEndpoints();
 app.Run();

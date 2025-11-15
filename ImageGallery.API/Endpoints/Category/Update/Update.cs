@@ -1,27 +1,27 @@
 using ImageGallery.Core.Services.Category;
 
-namespace ImageGallery.API.Endpoints.Category.Add;
+namespace ImageGallery.API.Endpoints.Category.Update;
 
-public sealed class AddCategoryEndpoint
+public sealed class UpdateCategoryEndpoint
     : BaseEndpoint<Request, Result<Guid>>
 {
     public override void Configure()
     {
-        Post(Request.Route);
-        Roles(Shared.Roles.Admin);
+        Put(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
+        Roles(Shared.Roles.Admin);
         Summary(s =>
         {
-            s.Summary = "Add Category";
-            s.Description = "Add Category";
+            s.Summary = "Update Category";
+            s.Description = "Update Category";
         });
     }
 
     protected override async Task ExecuteAsync(Request request, CancellationToken ct)
     {
-        var handler = Resolve<AddHandler>();
-        var command = new Core.Services.Category.Add(request.Title, request.Description);
+        var handler = Resolve<UpdateHandler>();
+        var command = new Core.Services.Category.Update(request.Id, request.Title, request.Description);
         var result = await handler.ExecuteAsync(command, ct);
         await SendAsync(result);
     }

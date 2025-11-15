@@ -13,12 +13,24 @@ var keycloak = builder.AddKeycloak("keycloak", 8080)
     .WithDataVolume()
     .WithRealmImport("./Realms")
     .WithReference(keycloakDb)
+    .WithEnvironment("KC_PROFILE", "prod")
     .WithEnvironment("KEYCLOAK_ADMIN", "admin")
-    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin");
+    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "admin")
+    .WithEnvironment("KC_HOSTNAME_STRICT", "false")
+    .WithEnvironment("KC_HOSTNAME_STRICT_HTTPS", "false")
+    .WithEnvironment("KC_HTTP_ENABLED", "true")
+    .WithEnvironment("KC_HTTP_PORT", "8080")
+    .WaitFor(keycloakDb);
 
 // SQL (from step 3)
-var sql = builder.AddSqlServer("sql").WithDataVolume();
-var db = sql.AddDatabase("DefaultConnection");
+var sql = builder.AddSqlServer("sql", port: 1433)
+    .WithDataVolume()
+    .WithEnvironment("ACCEPT_EULA", "Y")
+    .WithEnvironment("MSSQL_SA_PASSWORD", "Aa123456")
+    // .WithHealthCheck("tcp://localhost:1445")
+    .WithExternalHttpEndpoints();
+
+var db = sql.AddDatabase("ImageGallery");
 
 // API depends on both Keycloak and DB
 builder.AddProject<Projects.ImageGallery_API>("imagegallery-api")

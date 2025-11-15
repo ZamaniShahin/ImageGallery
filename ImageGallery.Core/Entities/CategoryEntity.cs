@@ -10,6 +10,12 @@ public class CategoryEntity : BaseEntity
         Title = title;
         Description = description;
     }
+    public void Update(string title, string description)
+    {
+        Title = title;
+        Description = description;
+        Modified();
+    }
 
     private CategoryEntity()
     {

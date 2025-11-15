@@ -10,7 +10,7 @@ public sealed class AddImageEndpoint
         Post(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
-        AllowAnonymous();
+        Roles(Shared.Roles.Admin);
         Summary(s =>
         {
             s.Summary = "Add Image into a category";

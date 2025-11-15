@@ -9,7 +9,7 @@ public sealed class AddServiceEndpoint : BaseEndpoint<Request, Result<Guid>>
         Post(Request.Route);
         PreProcessor<ValidationPreprocessor<Request>>();
         DontAutoTag();
-        AllowAnonymous();
+        Roles(Shared.Roles.Admin);
         Summary(s =>
         {
             s.Summary = "Add Service";

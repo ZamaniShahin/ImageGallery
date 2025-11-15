@@ -8,7 +8,6 @@ public sealed class GetAllCategoriesEndpoint : BaseEndpoint<EmptyRequest, Result
     {
         Get(Request.Route);
         DontAutoTag();
-        //todo: remove allow anonymous from needed endpoints
         AllowAnonymous();
         Summary(s =>
         {
