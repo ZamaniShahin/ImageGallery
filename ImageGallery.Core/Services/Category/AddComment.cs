@@ -25,7 +25,7 @@ public sealed class AddCommentHandler(IAppRepository<ImageEntity> repository, IA
         }
         
         
-        var comment = new CommentEntity(command.Body, command.Subject, image.Id);
+        var comment = new CommentEntity(command.Subject, command.Body, image.Id);
         await _commentRepository.AddAsync(comment);
         await _commentRepository.SaveChangesAsync();
 
