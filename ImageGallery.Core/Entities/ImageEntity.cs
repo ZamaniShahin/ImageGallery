@@ -11,6 +11,12 @@ public class ImageEntity : BaseEntity
         Content = content;
         Description = description;
     }
+    public void Update(byte[] content, string description)
+    {
+        Content = content;
+        Description = description;
+        this.Modified();
+    }
 
     private ImageEntity()
     {
