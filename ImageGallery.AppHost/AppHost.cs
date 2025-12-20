@@ -2,13 +2,11 @@ using Aspire.Hosting.Keycloak;
 var builder = DistributedApplication.CreateBuilder(args);
 
 
-// --- PostgreSQL for Keycloak ---
 var keycloakDb = builder.AddPostgres("keycloak-db")
     .WithDataVolume()
     .AddDatabase("keycloakdb"); // database name inside Postgres
 
 
-// Keycloak on a stable dev port + data volume + realm import (folder path relative to AppHost)
 var keycloak = builder.AddKeycloak("keycloak", 8080)
     .WithDataVolume()
     .WithRealmImport("./Realms")
@@ -22,7 +20,6 @@ var keycloak = builder.AddKeycloak("keycloak", 8080)
     .WithEnvironment("KC_HTTP_PORT", "8080")
     .WaitFor(keycloakDb);
 
-// SQL (from step 3)
 var sql = builder.AddSqlServer("sql", port: 1433)
     .WithDataVolume()
     .WithEnvironment("ACCEPT_EULA", "Y")
@@ -32,7 +29,6 @@ var sql = builder.AddSqlServer("sql", port: 1433)
 
 var db = sql.AddDatabase("ImageGallery");
 
-// API depends on both Keycloak and DB
 builder.AddProject<Projects.ImageGallery_API>("imagegallery-api")
     .WithExternalHttpEndpoints()
     .WithReference(db)
