@@ -23,6 +23,6 @@ public sealed class UpdateCategoryEndpoint
         var handler = Resolve<UpdateImageHandler>();
         var command = new Core.Services.Category.UpdateImage(request.Id, request.Content, request.Description);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

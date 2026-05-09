@@ -23,6 +23,6 @@ public sealed class AddCommentEndpoint
         var handler = Resolve<AddCommentHandler>();
         var command = new Core.Services.Category.AddComment(request.ImageId, request.Subject, request.Body);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

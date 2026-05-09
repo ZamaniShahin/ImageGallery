@@ -20,6 +20,6 @@ public sealed class GetImageByIdEndpoint : BaseEndpoint<Request, Result<ImageRec
     {
         var handler = Resolve<GetImageByIdHandler>();
         var result = await handler.ExecuteAsync(new Core.Services.Category.GetImageById(request.ImageId), ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

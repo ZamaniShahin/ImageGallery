@@ -22,6 +22,6 @@ public sealed class AddServiceEndpoint : BaseEndpoint<Request, Result<Guid>>
         var handler = Resolve<AddHandler>();
         var command = new Core.Services.Service.Add(request.Title, request.Description, request.Price, request.Logo);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

@@ -21,6 +21,6 @@ public sealed class DeleteServiceEndpoint : BaseEndpoint<Request, Result<bool>>
         var handler = Resolve<DeleteHandler>();
         var command = new Core.Services.Service.Delete(request.Id);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

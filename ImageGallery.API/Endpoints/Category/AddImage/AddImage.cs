@@ -23,6 +23,6 @@ public sealed class AddImageEndpoint
         var handler = Resolve<AddImageHandler>();
         var command = new Core.Services.Category.AddImage(request.Id, request.Content, request.Description);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

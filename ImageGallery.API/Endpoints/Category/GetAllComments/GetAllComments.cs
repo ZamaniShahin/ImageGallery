@@ -23,6 +23,6 @@ public sealed class GetAllCommentsEndpoint
         var handler = Resolve<GetAllCommentsHandler>();
         var command = new Core.Services.Category.GetAllComments(request.ImageId);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

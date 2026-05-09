@@ -23,6 +23,6 @@ public sealed class UpdateAboutUsEndpoint : BaseEndpoint<Request, Result<bool>>
         var command = new Core.Services.GetAboutUs.Update(request.Title, request.H2Title, request.Description, request.Image);
         var result = await handler.ExecuteAsync(command, ct);
 
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

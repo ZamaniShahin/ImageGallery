@@ -10,20 +10,40 @@
       "standardFlowEnabled": false,
       "directAccessGrantsEnabled": true,
       "serviceAccountsEnabled": false
+    },
+    {
+      "clientId": "imagegallery-frontend",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:5173/*", "http://localhost:5174/*", "http://localhost:5175/*"],
+      "webOrigins": ["+"]
     }
   ],
+  "roles": {
+    "realm": [
+      { "name": "Admin" }
+    ],
+    "client": {
+      "imagegallery-frontend": [
+        { "name": "Admin" }
+      ]
+    }
+  },
   "users": [
     {
       "username": "test1",
       "enabled": true,
       "emailVerified": true,
       "credentials": [
-        {
-          "type": "password",
-          "value": "Pass123$",
-          "temporary": false
-        }
-      ]
+        { "type": "password", "value": "Pass123$", "temporary": false }
+      ],
+      "realmRoles": ["Admin"],
+      "clientRoles": {
+        "imagegallery-frontend": ["Admin"]
+      }
     }
   ]
 }

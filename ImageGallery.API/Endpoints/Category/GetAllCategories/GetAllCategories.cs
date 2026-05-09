@@ -21,6 +21,6 @@ public sealed class GetAllCategoriesEndpoint : BaseEndpoint<EmptyRequest, Result
         var handler = Resolve<GetAllHandler>();
         var result = await handler.ExecuteAsync(new GetAll(), ct);
 
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

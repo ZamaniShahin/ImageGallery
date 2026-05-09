@@ -21,19 +21,19 @@ var keycloak = builder.AddKeycloak("keycloak", 8080)
     .WaitFor(keycloakDb);
 
 var sql = builder.AddSqlServer("sql", port: 1433)
-    .WithDataVolume()
-    .WithEnvironment("ACCEPT_EULA", "Y")
-    .WithEnvironment("MSSQL_SA_PASSWORD", "Aa123456")
-    // .WithHealthCheck("tcp://localhost:1445")
-    .WithExternalHttpEndpoints();
+    .WithDataVolume();
 
 var db = sql.AddDatabase("ImageGallery");
 
-builder.AddProject<Projects.ImageGallery_API>("imagegallery-api")
+var api = builder.AddProject<Projects.ImageGallery_API>("imagegallery-api")
     .WithExternalHttpEndpoints()
     .WithReference(db)
     .WithReference(keycloak)
     .WaitFor(db)
     .WaitFor(keycloak);
+
+builder.AddNpmApp("frontend", "../../ImageGallery-UI", "dev")
+    .WithHttpEndpoint(port: 5173, env: "VITE_PORT")
+    .WaitFor(api);
 
 builder.Build().Run();

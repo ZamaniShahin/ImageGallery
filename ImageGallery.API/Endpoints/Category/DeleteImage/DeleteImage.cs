@@ -23,6 +23,6 @@ public sealed class DeleteImageEndpoint
         var handler = Resolve<DeleteImageHandler>();
         var command = new Core.Services.Category.DeleteImage(request.Id);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

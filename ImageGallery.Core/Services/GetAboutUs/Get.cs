@@ -19,6 +19,11 @@ public sealed class GetHandler(IAppRepository<AboutUsEntity> repository) : IComm
             ct,
             x => x.Employees);
 
+        if (entity is null)
+        {
+            return Result.Fail<AboutUsRecord>("About us information not found");
+        }
+
         var about = new AboutUsRecord(
             entity.Title,
             entity.H2Title,
@@ -30,11 +35,6 @@ public sealed class GetHandler(IAppRepository<AboutUsEntity> repository) : IComm
                     e.Title,
                     e.Description,
                     e.ProfilePhoto)).ToList());
-
-        if (about is null)
-        {
-            return Result.Fail<AboutUsRecord>("About us information not found");
-        }
 
         return Result.Ok(about);
     }

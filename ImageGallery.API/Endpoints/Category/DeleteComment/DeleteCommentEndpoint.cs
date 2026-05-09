@@ -22,6 +22,6 @@ public class DeleteCommentEndpoint
         var handler = Resolve<DeleteCommentHandler>();
         var command = new Core.Services.Category.DeleteComment(request.CommentId);
         var result = await handler.ExecuteAsync(command, ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

@@ -20,6 +20,6 @@ public sealed class GetCategoryImagesEndpoint : BaseEndpoint<Request, Result<Lis
     {
         var handler = Resolve<GetAllImagesHandler>();
         var result = await handler.ExecuteAsync(new Core.Services.Category.GetAllImages(request.Id), ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

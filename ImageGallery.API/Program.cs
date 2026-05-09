@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ImageGalleryCors", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -85,9 +85,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+var connectionString = builder.Configuration.GetConnectionString("ImageGallery")
                        ?? throw new InvalidOperationException(
-                           "Connection string 'DefaultConnection' is not configured.");
+                           "Connection string 'ImageGallery' is not configured.");
 
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<AddImageHandler>()
@@ -124,5 +124,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+}
+
+await DbSeeder.SeedAsync(app.Services);
 
 app.Run();

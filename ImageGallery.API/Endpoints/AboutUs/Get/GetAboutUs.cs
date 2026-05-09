@@ -20,6 +20,6 @@ public sealed class GetAboutUsEndpoint : BaseEndpoint<EmptyRequest, Result<About
     {
         var handler = Resolve<GetHandler>();
         var result = await handler.ExecuteAsync(new Core.Services.GetAboutUs.Get(), ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

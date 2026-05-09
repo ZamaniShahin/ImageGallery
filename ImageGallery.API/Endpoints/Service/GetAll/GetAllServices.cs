@@ -20,6 +20,6 @@ public sealed class GetAllServicesEndpoint : BaseEndpoint<EmptyRequest, Result<L
     {
         var handler = Resolve<GetAllHandler>();
         var result = await handler.ExecuteAsync(new Core.Services.Service.GetAll(), ct);
-        await SendAsync(result);
+        await SendResultAsync(result);
     }
 }

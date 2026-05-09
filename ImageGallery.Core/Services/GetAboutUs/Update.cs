@@ -14,7 +14,7 @@ public sealed class UpdateHandler(IAppRepository<AboutUsEntity> repository) : IC
     public async Task<Result<bool>> ExecuteAsync(Update command, CancellationToken ct)
     {
         var about = await _repository
-            .SingleOrDefaultAsync<AboutUsEntity>(null, true, ct);
+            .SingleOrDefaultAsync<AboutUsEntity>(q => q, false, ct);
 
         if (about is null)
         {
